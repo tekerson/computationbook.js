@@ -57,6 +57,32 @@ let lessThan = (left, right) => Object.freeze({
   toString: () => left.toString() + " < " + right.toString(),
 });
 
+let and = (left, right) => Object.freeze({
+  reducible: true,
+  reduce: () =>
+    left.reducible ? and(left.reduce(), right) :
+    right.reducible ? and(left, right.reduce()) :
+    bool(left.value && right.value),
+  toString: () => left.toString() + " ∧ " + right.toString(),
+});
+
+let or = (left, right) => Object.freeze({
+  reducible: true,
+  reduce: () =>
+    left.reducible ? or(left.reduce(), right) :
+    right.reducible ? or(left, right.reduce()) :
+    bool(left.value || right.value),
+  toString: () => left.toString() + " ∨ " + right.toString(),
+});
+
+let not = (value) => Object.freeze({
+  reducible: true,
+  reduce: () =>
+    value.reducible ? not(value.reduce()) :
+    bool(!value.value),
+  toString: () => "¬" + value.toString(),
+});
+
 let machine = (expression) => {
   let step = () => {
     expression = expression.reduce();
@@ -76,14 +102,15 @@ let machine = (expression) => {
 };
 
 let expression =
-    lessThan(
-      divide(
-        subtract(
-          add(
-            multiply(number(1), number(2)),
-            multiply(number(3), number(4))),
-          add(number(4), number(2))),
-        number(2)),
-      number(5));
+    not(or(bool(false),
+        lessThan(
+          divide(
+            subtract(
+              add(
+                multiply(number(1), number(2)),
+                multiply(number(3), number(4))),
+              add(number(4), number(2))),
+            number(2)),
+          number(5))));
 
 machine(expression).run();
