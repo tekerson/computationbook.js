@@ -3,7 +3,13 @@
 let number = (value) => Object.freeze({
   value,
   reducible: false,
-  toString: () => value.toString(), 
+  toString: () => value.toString(),
+});
+
+let bool = (value) => Object.freeze({
+  value,
+  reducible: false,
+  toString: () => value.toString(),
 });
 
 let add = (left, right) => Object.freeze({
@@ -15,6 +21,15 @@ let add = (left, right) => Object.freeze({
   toString: () => left.toString() + " + " + right.toString(),
 });
 
+let subtract = (left, right) => Object.freeze({
+  reducible: true,
+  reduce: () =>
+    left.reducible ? subtract(left.reduce(), right) :
+    right.reducible ? subtract(left, right.reduce()) :
+    number(left.value - right.value),
+  toString: () => left.toString() + " - " + right.toString(),
+});
+
 let multiply = (left, right) => Object.freeze({
   reducible: true,
   reduce: () =>
@@ -22,6 +37,24 @@ let multiply = (left, right) => Object.freeze({
     right.reducible ? multiply(left, right.reduce()) :
     number(left.value * right.value),
   toString: () => left.toString() + " * " + right.toString(),
+});
+
+let divide = (left, right) => Object.freeze({
+  reducible: true,
+  reduce: () =>
+    left.reducible ? divide(left.reduce(), right) :
+    right.reducible ? divide(left, right.reduce()) :
+    number(left.value / right.value),
+  toString: () => left.toString() + " / " + right.toString(),
+});
+
+let lessThan = (left, right) => Object.freeze({
+  reducible: true,
+  reduce: () =>
+    left.reducible ? lessThan(left.reduce(), right) :
+    right.reducible ? lessThan(left, right.reduce()) :
+    bool(left.value < right.value),
+  toString: () => left.toString() + " < " + right.toString(),
 });
 
 let machine = (expression) => {
@@ -43,8 +76,14 @@ let machine = (expression) => {
 };
 
 let expression =
-  add(
-    multiply(number(1), number(2)),
-    multiply(number(3), number(4)));
+    lessThan(
+      divide(
+        subtract(
+          add(
+            multiply(number(1), number(2)),
+            multiply(number(3), number(4))),
+          add(number(4), number(2))),
+        number(2)),
+      number(5));
 
 machine(expression).run();
