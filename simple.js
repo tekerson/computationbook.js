@@ -12,80 +12,92 @@ let bool = (value) => Object.freeze({
   toString: () => value.toString(),
 });
 
+let variable = (name) => Object.freeze({
+  name,
+  reducible: true,
+  reduce: (environment) => {
+    if (environment[name] === undefined) {
+      throw new Error("Undefined Variable: " + name);
+    }
+    return environment[name];
+  },
+  toString: () => name.toString(),
+});
+
 let add = (left, right) => Object.freeze({
   reducible: true,
-  reduce: () =>
-    left.reducible ? add(left.reduce(), right) :
-    right.reducible ? add(left, right.reduce()) :
+  reduce: (environment) =>
+    left.reducible ? add(left.reduce(environment), right) :
+    right.reducible ? add(left, right.reduce(environment)) :
     number(left.value + right.value),
   toString: () => left.toString() + " + " + right.toString(),
 });
 
 let subtract = (left, right) => Object.freeze({
   reducible: true,
-  reduce: () =>
-    left.reducible ? subtract(left.reduce(), right) :
-    right.reducible ? subtract(left, right.reduce()) :
+  reduce: (environment) =>
+    left.reducible ? subtract(left.reduce(environment), right) :
+    right.reducible ? subtract(left, right.reduce(environment)) :
     number(left.value - right.value),
   toString: () => left.toString() + " - " + right.toString(),
 });
 
 let multiply = (left, right) => Object.freeze({
   reducible: true,
-  reduce: () =>
-    left.reducible ? multiply(left.reduce(), right) :
-    right.reducible ? multiply(left, right.reduce()) :
+  reduce: (environment) =>
+    left.reducible ? multiply(left.reduce(environment), right) :
+    right.reducible ? multiply(left, right.reduce(environment)) :
     number(left.value * right.value),
   toString: () => left.toString() + " * " + right.toString(),
 });
 
 let divide = (left, right) => Object.freeze({
   reducible: true,
-  reduce: () =>
-    left.reducible ? divide(left.reduce(), right) :
-    right.reducible ? divide(left, right.reduce()) :
+  reduce: (environment) =>
+    left.reducible ? divide(left.reduce(environment), right) :
+    right.reducible ? divide(left, right.reduce(environment)) :
     number(left.value / right.value),
   toString: () => left.toString() + " / " + right.toString(),
 });
 
 let lessThan = (left, right) => Object.freeze({
   reducible: true,
-  reduce: () =>
-    left.reducible ? lessThan(left.reduce(), right) :
-    right.reducible ? lessThan(left, right.reduce()) :
+  reduce: (environment) =>
+    left.reducible ? lessThan(left.reduce(environment), right) :
+    right.reducible ? lessThan(left, right.reduce(environment)) :
     bool(left.value < right.value),
   toString: () => left.toString() + " < " + right.toString(),
 });
 
 let and = (left, right) => Object.freeze({
   reducible: true,
-  reduce: () =>
-    left.reducible ? and(left.reduce(), right) :
-    right.reducible ? and(left, right.reduce()) :
+  reduce: (environment) =>
+    left.reducible ? and(left.reduce(environment), right) :
+    right.reducible ? and(left, right.reduce(environment)) :
     bool(left.value && right.value),
   toString: () => left.toString() + " ∧ " + right.toString(),
 });
 
 let or = (left, right) => Object.freeze({
   reducible: true,
-  reduce: () =>
-    left.reducible ? or(left.reduce(), right) :
-    right.reducible ? or(left, right.reduce()) :
+  reduce: (environment) =>
+    left.reducible ? or(left.reduce(environment), right) :
+    right.reducible ? or(left, right.reduce(environment)) :
     bool(left.value || right.value),
   toString: () => left.toString() + " ∨ " + right.toString(),
 });
 
 let not = (value) => Object.freeze({
   reducible: true,
-  reduce: () =>
-    value.reducible ? not(value.reduce()) :
+  reduce: (environment) =>
+    value.reducible ? not(value.reduce(environment)) :
     bool(!value.value),
   toString: () => "¬" + value.toString(),
 });
 
-let machine = (expression) => {
+let machine = (expression, environment) => {
   let step = () => {
-    expression = expression.reduce();
+    expression = expression.reduce(environment);
   };
 
   let run = () => {
@@ -107,10 +119,10 @@ let expression =
           divide(
             subtract(
               add(
-                multiply(number(1), number(2)),
+                multiply(variable('a'), number(2)),
                 multiply(number(3), number(4))),
               add(number(4), number(2))),
             number(2)),
-          number(5))));
+          variable('b'))));
 
-machine(expression).run();
+machine(expression, { a: number(2), b: number(6) }).run();
