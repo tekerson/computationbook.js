@@ -2,7 +2,7 @@ export var doNothing = (() => {
   let instance = Object.freeze({
     reducible: false,
     equals: (other) => other === doNothing,
-    toString: () => 'no-nothing',
+    toString: () => 'do-nothing',
   });
 
   return () => instance;
@@ -33,4 +33,16 @@ export var ifelse = (condition, consequence, alternative) => Object.freeze({
     }
   },
   toString: () => `if (${condition}) { ${consequence} } else { ${alternative} }`,
+});
+
+export var sequence = (first, second) => Object.freeze({
+  reducible: true,
+  reduce: (environment) => {
+    if (first === doNothing()) {
+      return [ second, environment ];
+    }
+    let [ first_reduced, environment_reduced ] = first.reduce(environment);
+    return [ sequence(first_reduced, second), environment_reduced ];
+  },
+  toString: () => `${first}\n=> ${second}`,
 });

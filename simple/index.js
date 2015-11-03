@@ -1,7 +1,7 @@
 import { number, add, subtract, multiply, divide, lessThan } from "./number";
 import { bool, and, or, not }  from "./bool";
 import { variable } from "./variable";
-import { doNothing, assign, ifelse } from "./statement";
+import { doNothing, assign, ifelse, sequence } from "./statement";
 
 let machine = (statement, environment) => {
   let step = () => {
@@ -33,9 +33,13 @@ let expression =
                number(2)),
              variable('b'))));
 
-let statement =
-    ifelse(lessThan(variable("a"), number(3)),
-           assign("output", number(3)),
-           assign("output", expression));
+let statement1 = assign("a", number(5));
 
-machine(statement, { a: number(2), b: number(6) }).run();
+let statement2 =
+    ifelse(lessThan(variable("a"), number(3)),
+           assign("x", bool(false)),
+           assign("x", expression));
+
+let statement = sequence(statement1, statement2);
+
+machine(statement, { b: number(6) }).run();
