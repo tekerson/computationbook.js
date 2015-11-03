@@ -18,3 +18,19 @@ export var assign = (name, expression) => Object.freeze({
   },
   toString: () => `${name} := ${expression}`,
 });
+
+
+export var ifelse = (condition, consequence, alternative) => Object.freeze({
+  reducible: true,
+  reduce: (environment) => {
+    if (condition.reducible) {
+      return [ ifelse(condition.reduce(environment), consequence, alternative), environment ];
+    }
+    if (condition.value === true) {
+      return [ consequence, environment ];
+    } else {
+      return [ alternative, environment ];
+    }
+  },
+  toString: () => `if (${condition}) { ${consequence} } else { ${alternative} }`,
+});
