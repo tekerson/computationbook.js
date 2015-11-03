@@ -1,18 +1,19 @@
 import { number, add, subtract, multiply, divide, lessThan } from "./number";
 import { bool, and, or, not }  from "./bool";
 import { variable } from "./variable";
+import { doNothing, assign } from "./statement";
 
-let machine = (expression, environment) => {
+let machine = (statement, environment) => {
   let step = () => {
-    expression = expression.reduce(environment);
+    [statement, environment] = statement.reduce(environment);
   };
 
   let run = () => {
-    while (expression.reducible) {
-      console.log(expression.toString());
+    while (statement.reducible) {
+      console.log(statement.toString());
       step();
     }
-    console.log(expression.toString());
+    console.log(statement.toString());
   };
 
   return {
@@ -32,4 +33,6 @@ let expression =
                number(2)),
              variable('b'))));
 
-machine(expression, { a: number(2), b: number(6) }).run();
+let statement = assign("output", expression);
+
+machine(statement, { a: number(2), b: number(6) }).run();
