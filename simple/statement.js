@@ -44,5 +44,11 @@ export var sequence = (first, second) => Object.freeze({
     let [ first_reduced, environment_reduced ] = first.reduce(environment);
     return [ sequence(first_reduced, second), environment_reduced ];
   },
-  toString: () => `${first}\n=> ${second}`,
+  toString: () => `${first}; ${second}`,
+});
+
+export var loopWhile = (condition, body) => Object.freeze({
+  reducible: true,
+  reduce: (environment) => [ ifelse(condition, sequence(body, loopWhile(condition, body)), doNothing()), environment ],
+  toString: () => `while (${condition}) { ${body} }`,
 });
