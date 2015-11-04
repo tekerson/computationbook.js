@@ -34,3 +34,4 @@ let loop =
       assign("output", variable("acc")));
 
 machine(loop, {}).run();
+console.log(loop.evaluate({}));

@@ -1,11 +1,7 @@
 export var variable = (name) => Object.freeze({
   name,
   reducible: true,
-  reduce: (environment) => {
-    if (environment[name] === undefined) {
-      throw new Error("Undefined Variable: " + name);
-    }
-    return environment[name];
-  },
+  reduce: (environment) => environment[name],
+  evaluate: (environment) => environment[name],
   toString: () => name.toString(),
 });
