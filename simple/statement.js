@@ -3,6 +3,7 @@ export var doNothing = (() => {
     reducible: false,
     equals: (other) => other === doNothing,
     evaluate: (environment) => environment,
+    toJS: () => `(function (e) { return e; })`,
     toString: () => 'do-nothing',
   });
 
@@ -18,6 +19,7 @@ export var assign = (name, expression) => Object.freeze({
     return [ doNothing(), Object.assign({}, environment, { [name]: expression })]
   },
   evaluate: (environment) => Object.assign({}, environment, { [name]: expression.evaluate(environment) }),
+  toJS: () => `(function (e) { return Object.assign({}, e, {"${name}": ${expression.toJS()}(e)}); })`,
   toString: () => `${name} := ${expression}`,
 });
 
@@ -41,6 +43,13 @@ export var ifelse = (condition, consequence, alternative) => Object.freeze({
       return alternative.evaluate(environment);
     }
   },
+  toJS: () => `(function(e) {
+    if (${condition.toJS()}(e)) {
+      return ${consequence.toJS()}(e);
+    } else {
+      return ${alternative.toJS()}(e);
+    }
+  })`,
   toString: () => `if (${condition}) { ${consequence} } else { ${alternative} }`,
 });
 
@@ -54,6 +63,7 @@ export var sequence = (first, second) => Object.freeze({
     return [ sequence(first_reduced, second), environment_reduced ];
   },
   evaluate: (environment) => second.evaluate(first.evaluate(environment)),
+  toJS: () => `(function (e) { return ${second.toJS()}(${first.toJS()}(e)); })`,
   toString: () => `${first}; ${second}`,
 });
 
@@ -67,5 +77,11 @@ export var loopWhile = (condition, body) => Object.freeze({
       return environment;
     }
   },
+  toJS: () => `(function (e) {
+    while (${condition.toJS()}(e)) {
+      e = ${body.toJS()}(e);
+    };
+    return e;
+  })`,
   toString: () => `while (${condition}) { ${body} }`,
 });

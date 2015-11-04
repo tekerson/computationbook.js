@@ -35,3 +35,4 @@ let loop =
 
 machine(loop, {}).run();
 console.log(loop.evaluate({}));
+console.log(eval(loop.toJS())({}));

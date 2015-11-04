@@ -4,6 +4,7 @@ export var number = (value) => Object.freeze({
   value,
   reducible: false,
   evaluate: (environment) => number(value),
+  toJS: () => `(function (e) { return ${value}; })`,
   toString: () => value.toString(),
 });
 
@@ -14,6 +15,7 @@ export var add = (left, right) => Object.freeze({
     right.reducible ? add(left, right.reduce(environment)) :
     number(left.value + right.value),
   evaluate: (environment) => number(left.evaluate(environment).value + right.evaluate(environment).value),
+  toJS: () => `(function (e) { return ${left.toJS()}(e) + ${right.toJS()}(e); })`,
   toString: () => left.toString() + " + " + right.toString(),
 });
 
@@ -24,6 +26,7 @@ export var subtract = (left, right) => Object.freeze({
     right.reducible ? subtract(left, right.reduce(environment)) :
     number(left.value - right.value),
   evaluate: (environment) => number(left.evaluate(environment).value - right.evaluate(environment).value),
+  toJS: () => `(function (e) { return ${left.toJS()}(e) - ${right.toJS()}(e); })`,
   toString: () => left.toString() + " - " + right.toString(),
 });
 
@@ -34,6 +37,7 @@ export var multiply = (left, right) => Object.freeze({
     right.reducible ? multiply(left, right.reduce(environment)) :
     number(left.value * right.value),
   evaluate: (environment) => number(left.evaluate(environment).value * right.evaluate(environment).value),
+  toJS: () => `(function (e) { return ${left.toJS()}(e) * ${right.toJS()}(e); })`,
   toString: () => left.toString() + " * " + right.toString(),
 });
 
@@ -44,6 +48,7 @@ export var divide = (left, right) => Object.freeze({
     right.reducible ? divide(left, right.reduce(environment)) :
     number(left.value / right.value),
   evaluate: (environment) => number(left.evaluate(environment).value / right.evaluate(environment).value),
+  toJS: () => `(function (e) { return ${left.toJS()}(e) / ${right.toJS()}(e); })`,
   toString: () => left.toString() + " / " + right.toString(),
 });
 
@@ -54,5 +59,6 @@ export var lessThan = (left, right) => Object.freeze({
     right.reducible ? lessThan(left, right.reduce(environment)) :
     bool(left.value < right.value),
   evaluate: (environment) => number(left.evaluate(environment).value < right.evaluate(environment).value),
+  toJS: () => `(function (e) { return ${left.toJS()}(e) < ${right.toJS()}(e); })`,
   toString: () => left.toString() + " < " + right.toString(),
 });
