@@ -3,13 +3,17 @@ import * as NFA from "./nfa";
 import { design } from "./fa";
 
 let rulebook = NFA.rulebook([
-  rule(1, 'a', 1), rule(1, 'b', 1), rule(1, 'b', 2),
-  rule(2, 'a', 3), rule(2, 'b', 3),
-  rule(3, 'a', 4), rule(3, 'b', 4),
+  rule(1, null, 2), rule(1, null, 4),
+  rule(2, 'a', 3),
+  rule(3, 'a', 2),
+  rule(4, 'a', 5),
+  rule(5, 'a', 6),
+  rule(6, 'a', 4),
 ]);
 
-let nfa = design(NFA.nfa, [1], [4], rulebook);
+let nfa = design(NFA.nfa, [1], [2,4], rulebook);
 
-console.log(nfa.accepts('bab'));
-console.log(nfa.accepts('bbbbb'));
-console.log(nfa.accepts('bbabb'));
+console.log(nfa.accepts('aaa'));
+console.log(nfa.accepts('aaaaa'));
+console.log(nfa.accepts('aaaaaa'));
+console.log(nfa.accepts('aaaaaaa'));
