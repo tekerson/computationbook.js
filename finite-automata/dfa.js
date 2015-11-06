@@ -1,14 +1,4 @@
-export function rule (state, character, next) {
-  let applies = (currentState, input) => (currentState === state) && (character === input),
-      follow = () => next,
-      toString = () => `#<FARule ${state.toString()} --${character}--> ${next.toString()}>`
-
-  return Object.freeze({
-    applies,
-    follow,
-    toString,
-  })
-}
+import rule from "./rule";
 
 export function rulebook (rules) {
   let next = (state, character) => ruleFor(state, character).follow(),
@@ -31,7 +21,7 @@ export function dfa (currentState, acceptStates, rulebook) {
   });
 }
 
-export function dfaDesign (startState, acceptStates, rulebook) {
+export function design (startState, acceptStates, rulebook) {
   let toDFA = () => dfa(startState, acceptStates, rulebook),
       accepts = (string) => {
         let newDFA = toDFA();
