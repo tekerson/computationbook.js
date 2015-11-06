@@ -1,6 +1,7 @@
 module.exports = {
-  entry: { 
+  entry: {
     "simple": "./simple/index.js",
+    "dfa": "./finite-automata/index.js",
   },
 
   output: {
