@@ -3,6 +3,7 @@ module.exports = {
     "simple": "./simple/index.js",
     "dfa": "./finite-automata/index.js",
     "nfa": "./finite-automata/index-nfa.js",
+    "regex": "./finite-automata/index-regex.js",
   },
 
   output: {
