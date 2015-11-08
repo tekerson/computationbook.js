@@ -1,5 +1,3 @@
-/* @flow */
-
 import * as NFA from "./nfa";
 import { design, rule } from "./fa";
 

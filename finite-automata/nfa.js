@@ -1,13 +1,4 @@
-/* @flow */
-/*::
-
-import type { FA, Rule, Rulebook, State } from "./fa";
-
-type NFA = {} & FA;
-
-*/
-
-export function rulebook (rules/*: Array<Rule>*/)/* : Rulebook */ {
+export function rulebook (rules) {
   let next = (states, character) => toSet(flatMap(states, state => followRulesFor(state, character))),
       followRulesFor = (state, character) => rulesFor(state, character).map(rule => rule.follow()),
       rulesFor = (state, character) => rules.filter(rule => rule.applies(state, character)),
@@ -27,7 +18,7 @@ export function rulebook (rules/*: Array<Rule>*/)/* : Rulebook */ {
   });
 }
 
-export function nfa (startState/*: Array<State>*/, acceptStates/*: Array<State>*/, rulebook/*: Rulebook */)/* : NFA */ {
+export function nfa (startState, acceptStates, rulebook) {
   let currentStates = rulebook.followFreeMoves(startState),
       isAccepting = () => currentStates.filter((state) => acceptStates.indexOf(state) !== -1).length > 0,
       read = (character) => {
