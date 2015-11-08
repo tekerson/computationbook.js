@@ -1,22 +1,13 @@
-/*
-import type { Rule, State } from "./rule";
+/* @flow */
+/*::
 
-type Rulebook = {
-  rules: Array<Rule>,
-  next: (s:Array<State>, i:string) => Array<State>,
-  followFreeMoves: (s:Array<State>) => Array<State>,
-}
+import type { FA, Rule, Rulebook, State } from "./fa";
 
-type NFA = {
-  isAccepting: () => bool,
-  read: (i:string) => any,
-  readString: (s:string) => any,
-};
+type NFA = {} & FA;
 
 */
 
-//@type Array<Rule> => Rulebook
-export function rulebook (rules) {
+export function rulebook (rules/*: Array<Rule>*/)/* : Rulebook */ {
   let next = (states, character) => toSet(flatMap(states, state => followRulesFor(state, character))),
       followRulesFor = (state, character) => rulesFor(state, character).map(rule => rule.follow()),
       rulesFor = (state, character) => rules.filter(rule => rule.applies(state, character)),
@@ -36,8 +27,7 @@ export function rulebook (rules) {
   });
 }
 
-//@type (Array<State>, Array<State>, Rulebook) => NFA
-export function nfa (startState, acceptStates, rulebook) {
+export function nfa (startState/*: Array<State>*/, acceptStates/*: Array<State>*/, rulebook/*: Rulebook */)/* : NFA */ {
   let currentStates = rulebook.followFreeMoves(startState),
       isAccepting = () => currentStates.filter((state) => acceptStates.indexOf(state) !== -1).length > 0,
       read = (character) => {
@@ -52,17 +42,14 @@ export function nfa (startState, acceptStates, rulebook) {
   });
 }
 
-//@type forall A,B. (Array<A>, (A => Array<B>)) => Array<B>
 function flatMap (arr, f) {
-  let mapped = arr.map(f);
-  return Array.prototype.concat(...mapped);
+  return Array.prototype.concat(...arr.map(f));
 }
 
 function toSet (arr) {
-  return arr.reduce(((acc, el) => (acc.indexOf(el) === -1) ? [...acc, el] : acc), []);
+  return arr.reduce(((acc, el) => (acc.indexOf(el) === -1) ? acc.concat([el]) : acc), []);
 }
 
-//@type forall A. (Array<A>, Array<A>) => bool
 function isSubset (sub, sup) {
   return sub.filter((el) => sup.indexOf(el) === -1).length === 0;
 }
