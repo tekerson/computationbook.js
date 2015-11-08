@@ -9,3 +9,4 @@ let pattern =
 console.log(pattern.toString());
 
 console.log(Regex.concatenate(Regex.literal('a'), Regex.literal('b')).matches('ab'));
+console.log(Regex.choose(Regex.literal('a'), Regex.literal('b')).matches('b'));

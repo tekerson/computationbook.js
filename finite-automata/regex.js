@@ -57,9 +57,9 @@ export function concatenate (first, second) {
             secondDesign = second.toNFADesign(),
             startState = firstDesign.startState,
             acceptStates = secondDesign.acceptStates,
-            rules = firstDesign.rulebook.rules.concat(...secondDesign.rulebook.rules),
+            rules = [...firstDesign.rulebook.rules, ...secondDesign.rulebook.rules],
             extraRules = firstDesign.acceptStates.map(state => rule(state, null, secondDesign.startState)),
-            rulebook = NFA.rulebook(rules.concat(...extraRules));
+            rulebook = NFA.rulebook([...rules, ...extraRules]);
         return design(NFA.nfa, startState, acceptStates, rulebook);
       };
 
@@ -72,11 +72,25 @@ export function concatenate (first, second) {
 
 export function choose (first, second) {
   let precedence = 0,
-      toString = () => [first, second].map(pattern => pattern.bracket(precedence)).join('|');
+      toString = () => [first, second].map(pattern => pattern.bracket(precedence)).join('|'),
+      toNFADesign = () => {
+        let firstDesign = first.toNFADesign(),
+            secondDesign = second.toNFADesign(),
+            startState = Symbol('Choose'),
+            acceptStates = [...firstDesign.acceptStates, ...secondDesign.acceptStates],
+            rules = [...firstDesign.rulebook.rules, ...secondDesign.rulebook.rules],
+            extraRules = [
+              rule(startState, null, firstDesign.startState),
+              rule(startState, null, secondDesign.startState)
+            ],
+            rulebook = NFA.rulebook([...rules, ...extraRules]);
+        return design(NFA.nfa, [startState], acceptStates, rulebook);
+      };
 
   return Object.freeze(Object.assign(Object.create(patternProto), {
     precedence,
     toString,
+    toNFADesign,
   }));
 }
 
