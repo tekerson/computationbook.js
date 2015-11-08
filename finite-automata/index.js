@@ -1,6 +1,5 @@
-import rule from "./rule";
 import * as DFA from "./dfa";
-import { design } from "./fa";
+import { design, rule } from "./fa";
 
 let rulebook = DFA.rulebook([
   rule(1, 'a', 2), rule(1, 'b', 1),

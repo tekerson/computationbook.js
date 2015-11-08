@@ -7,3 +7,5 @@ let pattern =
         Regex.literal('a')));
 
 console.log(pattern.toString());
+
+console.log(Regex.concatenate(Regex.literal('a'), Regex.literal('b')).matches('ab'));
