@@ -63,6 +63,6 @@ function toSet (arr) {
 }
 
 //@type forall A. (Array<A>, Array<A>) => bool
-export function isSubset (sub, sup) {
+function isSubset (sub, sup) {
   return sub.filter((el) => sup.indexOf(el) === -1).length === 0;
 }

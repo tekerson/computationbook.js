@@ -21,7 +21,7 @@ export function empty () {
         let startState = Symbol('Empty'),
             acceptState = startState,
             rulebook = NFA.rulebook([]);
-        return design(NFA.nfa, [startState], [acceptState], rulebook);
+        return design(NFA.nfa, startState, [acceptState], rulebook);
       };
 
   return Object.freeze(Object.assign(Object.create(patternProto), {
@@ -39,7 +39,7 @@ export function literal (character) {
             acceptState = Symbol('Literal:' + character + ':end'),
             rules = [rule(startState, character, acceptState)],
             rulebook = NFA.rulebook(rules);
-        return design(NFA.nfa, [startState], [acceptState], rulebook);
+        return design(NFA.nfa, startState, [acceptState], rulebook);
       };
 
   return Object.freeze(Object.assign(Object.create(patternProto), {
@@ -84,7 +84,7 @@ export function choose (first, second) {
               rule(startState, null, secondDesign.startState)
             ],
             rulebook = NFA.rulebook([...rules, ...extraRules]);
-        return design(NFA.nfa, [startState], acceptStates, rulebook);
+        return design(NFA.nfa, startState, acceptStates, rulebook);
       };
 
   return Object.freeze(Object.assign(Object.create(patternProto), {
@@ -96,10 +96,20 @@ export function choose (first, second) {
 
 export function repeat (pattern) {
   let precedence = 2,
-      toString = () => pattern.bracket(precedence) + "*";
+      toString = () => pattern.bracket(precedence) + "*",
+      toNFADesign = () => {
+        let patternDesign = pattern.toNFADesign(),
+            startState = patternDesign.startState,
+            acceptStates = patternDesign.acceptStates,
+            rules = patternDesign.rulebook.rules,
+            extraRules = patternDesign.acceptStates.map(acceptState => rule(acceptState, null, patternDesign.startState)),
+            rulebook = NFA.rulebook([...rules, ...extraRules]);
+        return design(NFA.nfa, startState, acceptStates, rulebook);
+      };
 
   return Object.freeze(Object.assign(Object.create(patternProto), {
     precedence,
     toString,
+    toNFADesign,
   }));
 }
