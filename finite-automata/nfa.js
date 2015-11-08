@@ -17,8 +17,8 @@ type NFA = {
 
 //@type Array<Rule> => Rulebook
 export function rulebook (rules) {
-  let next = (states, character) => flatMap(states, state => followRulesFor(state, character)),
-      followRulesFor = (state, character) => flatMap(rulesFor(state, character), rule => rule.follow()),
+  let next = (states, character) => toSet(flatMap(states, state => followRulesFor(state, character))),
+      followRulesFor = (state, character) => rulesFor(state, character).map(rule => rule.follow()),
       rulesFor = (state, character) => rules.filter(rule => rule.applies(state, character)),
       followFreeMoves = (states) => {
         let more = next(states, null);
