@@ -1,3 +1,5 @@
+import { flatMap } from "./util";
+
 export function rulebook (rules) {
   let next = (states, character) => toSet(flatMap(states, state => followRulesFor(state, character))),
       followRulesFor = (state, character) => rulesFor(state, character).map(rule => rule.follow()),
@@ -31,10 +33,6 @@ export function nfa (startState, acceptStates, rulebook) {
     read,
     readString,
   });
-}
-
-function flatMap (arr, f) {
-  return Array.prototype.concat(...arr.map(f));
 }
 
 function toSet (arr) {
