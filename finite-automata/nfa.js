@@ -1,7 +1,7 @@
-import { flatMap } from "./util";
+import { flatMap, uniq, isSubset } from "./util";
 
 export function rulebook (rules) {
-  let next = (states, character) => toSet(flatMap(states, state => followRulesFor(state, character))),
+  let next = (states, character) => uniq(flatMap(states, state => followRulesFor(state, character))),
       followRulesFor = (state, character) => rulesFor(state, character).map(rule => rule.follow()),
       rulesFor = (state, character) => rules.filter(rule => rule.applies(state, character)),
       followFreeMoves = (states) => {
@@ -35,10 +35,3 @@ export function nfa (startState, acceptStates, rulebook) {
   });
 }
 
-function toSet (arr) {
-  return arr.reduce(((acc, el) => (acc.indexOf(el) === -1) ? acc.concat([el]) : acc), []);
-}
-
-function isSubset (sub, sup) {
-  return sub.filter((el) => sup.indexOf(el) === -1).length === 0;
-}
