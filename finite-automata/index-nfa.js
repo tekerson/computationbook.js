@@ -10,7 +10,7 @@ let rulebook = NFA.rulebook([
   rule(6, 'a', 4),
 ]);
 
-let nfa = design(NFA.nfa, [1], [2,4], rulebook);
+let nfa = NFA.design([1], [2,4], rulebook);
 
 console.log(nfa.accepts('aa'));
 console.log(nfa.accepts('aaa'));

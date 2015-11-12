@@ -20,15 +20,18 @@ export function dfa (currentState, acceptStates, rulebook) {
 }
 
 export function design (startState, acceptStates, rulebook) {
-  let toDFA = () => dfa(startState, acceptStates, rulebook),
+  let toFA = () => dfa(startState, acceptStates, rulebook),
       accepts = (string) => {
-        let newDFA = toDFA();
-        newDFA.readString(string);
-        return newDFA.isAccepting();
+        let newFA = toFA();
+        newFA.readString(string);
+        return newFA.isAccepting();
       };
 
   return Object.freeze({
-    toDFA,
+    startState,
+    acceptStates,
+    rulebook,
     accepts,
+    toFA,
   });
 }
