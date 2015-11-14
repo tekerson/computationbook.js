@@ -1,4 +1,4 @@
-import * as Regex from "./regex";
+import * as Regex from ".";
 
 let pattern =
     Regex.repeat(

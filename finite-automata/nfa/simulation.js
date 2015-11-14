@@ -1,7 +1,7 @@
-import * as DFA from "./dfa";
-import { rule } from "./fa";
+import * as DFA from "../dfa";
+import { rule } from "../fa";
 import { uniq, chain } from "ramda";
-import { isSubset } from "./util";
+import { isSubset } from "../util";
 
 export function nfaSimulation (nfaDesign) {
   let nextState = (state, character) => {

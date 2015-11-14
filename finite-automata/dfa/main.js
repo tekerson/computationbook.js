@@ -1,5 +1,5 @@
-import * as DFA from "./dfa";
-import { rule } from "./fa";
+import * as DFA from ".";
+import { rule } from "../fa";
 
 let rulebook = DFA.rulebook([
   rule(1, 'a', 2), rule(1, 'b', 1),
@@ -9,6 +9,6 @@ let rulebook = DFA.rulebook([
 
 let dfa = DFA.design(1, [3], rulebook);
 
-console.log(dfa.accepts('a'));
-console.log(dfa.accepts('baa'));
+console.log(!dfa.accepts('a'));
+console.log(!dfa.accepts('baa'));
 console.log(dfa.accepts('baba'));

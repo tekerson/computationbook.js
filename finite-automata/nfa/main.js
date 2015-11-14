@@ -1,5 +1,5 @@
-import * as NFA from "./nfa";
-import { rule } from "./fa";
+import * as NFA from ".";
+import { rule } from "../fa";
 
 let rulebook = NFA.rulebook([
   rule(1, null, 2), rule(1, null, 4),

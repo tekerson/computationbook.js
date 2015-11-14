@@ -1,10 +1,10 @@
 module.exports = {
   entry: {
-    "simple": "./simple/index.js",
-    "dfa": "./finite-automata/index.js",
-    "nfa": "./finite-automata/index-nfa.js",
-    "nfa-simulation": "./finite-automata/index-nfa-simulation.js",
-    "regex": "./finite-automata/index-regex.js",
+    "simple": "./simple/main.js",
+    "dfa": "./finite-automata/dfa/main.js",
+    "nfa": "./finite-automata/nfa/main.js",
+    "nfa-simulation": "./finite-automata/nfa/main-simulation.js",
+    "regex": "./finite-automata/regex/main.js",
   },
 
   output: {

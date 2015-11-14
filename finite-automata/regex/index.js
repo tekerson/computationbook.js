@@ -1,6 +1,5 @@
-import * as NFA from "./nfa";
-import { flatMap } from "./util";
-import { rule } from "./fa";
+import * as NFA from "../nfa";
+import { rule } from "../fa";
 
 let patternProto = {
   bracket: function (outerPrecedence) {
@@ -22,7 +21,7 @@ export function empty () {
         let startState = Symbol('Empty'),
             acceptState = startState,
             rulebook = NFA.rulebook([]);
-        return NFA.design([startState], [acceptState], rulebook);
+        return NFA.design(startState, [acceptState], rulebook);
       };
 
   return Object.freeze(Object.assign(Object.create(patternProto), {
@@ -40,7 +39,7 @@ export function literal (character) {
             acceptState = Symbol('Literal:' + character + ':end'),
             rules = [rule(startState, character, acceptState)],
             rulebook = NFA.rulebook(rules);
-        return NFA.design([startState], [acceptState], rulebook);
+        return NFA.design(startState, [acceptState], rulebook);
       };
 
   return Object.freeze(Object.assign(Object.create(patternProto), {
@@ -59,8 +58,7 @@ export function concatenate (first, second) {
             startState = firstDesign.startState,
             acceptStates = secondDesign.acceptStates,
             rules = [...firstDesign.rulebook.rules, ...secondDesign.rulebook.rules],
-            extraRules = flatMap(firstDesign.acceptStates,
-                                 start1 => secondDesign.startState.map(start2 => rule(start1, null, start2))),
+            extraRules = firstDesign.acceptStates.map(state => rule(state, null, secondDesign.startState)),
             rulebook = NFA.rulebook([...rules, ...extraRules]);
         return NFA.design(startState, acceptStates, rulebook);
       };
@@ -81,12 +79,9 @@ export function choose (first, second) {
             startState = Symbol('Choose'),
             acceptStates = [...firstDesign.acceptStates, ...secondDesign.acceptStates],
             rules = [...firstDesign.rulebook.rules, ...secondDesign.rulebook.rules],
-            extraRules = [
-                ...firstDesign.startState.map(state => rule(startState, null, state)),
-                ...secondDesign.startState.map(state => rule(startState, null, state))
-            ],
+            extraRules = [firstDesign, secondDesign].map(design => rule(startState, null, design.startState)),
             rulebook = NFA.rulebook([...rules, ...extraRules]);
-        return NFA.design([startState], acceptStates, rulebook);
+        return NFA.design(startState, acceptStates, rulebook);
       };
 
   return Object.freeze(Object.assign(Object.create(patternProto), {
@@ -101,11 +96,13 @@ export function repeat (pattern) {
       toString = () => pattern.bracket(precedence) + "*",
       toNFADesign = () => {
         let patternDesign = pattern.toNFADesign(),
-            startState = patternDesign.startState,
-            acceptStates = patternDesign.acceptStates,
+            startState = Symbol('Repeat'),
+            acceptStates = [...patternDesign.acceptStates, startState],
             rules = patternDesign.rulebook.rules,
-            extraRules = flatMap(patternDesign.acceptStates,
-                                     acceptState => patternDesign.startState.map(state => rule(acceptState, null, state))),
+            extraRules = [
+                ...patternDesign.acceptStates.map(acceptState => rule(acceptState, null, patternDesign.startState)),
+                rule(startState, null, patternDesign.startState)
+            ],
             rulebook = NFA.rulebook([...rules, ...extraRules]);
         return NFA.design(startState, acceptStates, rulebook);
       };

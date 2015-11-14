@@ -1,5 +1,5 @@
 import { any, contains, chain, uniq } from "ramda";
-import { isSubset } from "./util";
+import { isSubset } from "../util";
 
 export function rulebook (rules) {
   let next = (states, character) => uniq(chain(state => followRulesFor(state, character), states)),
