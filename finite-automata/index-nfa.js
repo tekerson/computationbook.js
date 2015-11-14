@@ -1,5 +1,5 @@
 import * as NFA from "./nfa";
-import { design, rule } from "./fa";
+import { rule } from "./fa";
 
 let rulebook = NFA.rulebook([
   rule(1, null, 2), rule(1, null, 4),
@@ -10,10 +10,10 @@ let rulebook = NFA.rulebook([
   rule(6, 'a', 4),
 ]);
 
-let nfa = NFA.design([1], [2,4], rulebook);
+let nfa = NFA.design(1, [2,4], rulebook);
 
 console.log(nfa.accepts('aa'));
 console.log(nfa.accepts('aaa'));
-console.log(nfa.accepts('aaaaa'));
+console.log(!nfa.accepts('aaaaa'));
 console.log(nfa.accepts('aaaaaa'));
-console.log(nfa.accepts('aaaaaaa'));
+console.log(!nfa.accepts('aaaaaaa'));

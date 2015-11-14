@@ -14,7 +14,9 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
+    "babel-core": "^6.1.21",
     "babel-loader": "^6.0.1",
+    "ramda": "^0.18.0",
     "webpack": "^1.12.2"
   }
 }

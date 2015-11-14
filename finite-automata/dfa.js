@@ -1,14 +1,17 @@
+import { contains } from "ramda";
+
 export function rulebook (rules) {
   let next = (state, character) => ruleFor(state, character).follow(),
       ruleFor = (state, character) => rules.find((rule) => rule.applies(state, character));
 
   return Object.freeze({
     next,
+    rules,
   });
 }
 
 export function dfa (currentState, acceptStates, rulebook) {
-  let isAccepting = () => acceptStates.indexOf(currentState) !== -1,
+  let isAccepting = () => contains(currentState, acceptStates),
       read = (character) => currentState = rulebook.next(currentState, character),
       readString = (string) => string.split("").forEach(read);
 

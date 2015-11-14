@@ -1,12 +1,5 @@
-
-export function flatMap (arr, f) {
-  return Array.prototype.concat(...arr.map(f));
-}
-
-export function uniq (arr) {
-  return Array.from(new Set(arr));
-}
+import { not, contains } from 'ramda';
 
 export function isSubset (sub, sup) {
-  return sub.filter((el) => sup.indexOf(el) === -1).length === 0;
+  return sub.filter(el => not(contains(el, sup))).length === 0;
 }

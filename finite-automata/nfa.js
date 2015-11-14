@@ -1,9 +1,11 @@
-import { flatMap, uniq, isSubset } from "./util";
+import { any, contains, chain, uniq } from "ramda";
+import { isSubset } from "./util";
 
 export function rulebook (rules) {
-  let next = (states, character) => uniq(flatMap(states, state => followRulesFor(state, character))),
+  let next = (states, character) => uniq(chain(state => followRulesFor(state, character), states)),
       followRulesFor = (state, character) => rulesFor(state, character).map(rule => rule.follow()),
       rulesFor = (state, character) => rules.filter(rule => rule.applies(state, character)),
+      alphabet = () => uniq(rules.map(rule => rule.character).filter(character => character !== null)),
       followFreeMoves = (states) => {
         let more = next(states, null);
         if (isSubset(more, states)) {
@@ -17,12 +19,14 @@ export function rulebook (rules) {
     rules,
     next,
     followFreeMoves,
+    alphabet,
   });
 }
 
 export function nfa (startState, acceptStates, rulebook) {
   let currentStates = rulebook.followFreeMoves(startState),
-      isAccepting = () => currentStates.filter((state) => acceptStates.indexOf(state) !== -1).length > 0,
+      currentState = () => currentStates,
+      isAccepting = () => any(state => contains(state, acceptStates), currentStates),
       read = (character) => {
         currentStates = rulebook.followFreeMoves(rulebook.next(currentStates, character));
       },
@@ -32,11 +36,13 @@ export function nfa (startState, acceptStates, rulebook) {
     isAccepting,
     read,
     readString,
+    currentState,
   });
 }
 
 export function design (startState, acceptStates, rulebook) {
-  let toFA = () => nfa(startState, acceptStates, rulebook),
+  let toFA = () => nfa([startState], acceptStates, rulebook),
+      toFAIn = (currentState) => nfa(currentState, acceptStates, rulebook),
       accepts = (string) => {
         let newFA = toFA();
         newFA.readString(string);
@@ -49,5 +55,6 @@ export function design (startState, acceptStates, rulebook) {
     rulebook,
     accepts,
     toFA,
+    toFAIn,
   });
 }
