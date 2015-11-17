@@ -2,7 +2,7 @@ import { contains } from "ramda";
 
 import * as R from "ramda";
 
-export default function pda (currentConfiguration, acceptStates, rulebook) {
+export default function dpda (currentConfiguration, acceptStates, rulebook) {
   let isAccepting = () => R.contains(currentConfiguration.state, acceptStates);
   let readCharacter = (character) => {
     currentConfiguration = rulebook.appliesTo(currentConfiguration, character)

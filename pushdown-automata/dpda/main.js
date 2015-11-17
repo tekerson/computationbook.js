@@ -1,6 +1,8 @@
-import mkPdaDesign from "./design";
-import mkRulebook from "./rulebook";
-import mkRule from "./rule";
+import {
+  design as mkPDADesign,
+  rulebook as mkRulebook,
+  rule as mkRule
+} from ".";
 
 var rule = mkRule(1, '(', 2, '$', ['b', '$']);
 var rules = [
@@ -11,7 +13,7 @@ var rules = [
 ];
 let rulebook = mkRulebook(rules);
 
-let pdaDesign = mkPdaDesign(1, "$", [1], rulebook);
+let pdaDesign = mkPDADesign(1, "$", [1], rulebook);
 
 console.log(pdaDesign.accepts("()"));
 console.log(pdaDesign.accepts("(())"));

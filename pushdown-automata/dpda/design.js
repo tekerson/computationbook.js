@@ -1,4 +1,4 @@
-import mkPDA from "./pda";
+import mkDPDA from "./dpda";
 import mkStack from "./stack";
 import mkConfiguration from "./configuration";
 
@@ -6,7 +6,7 @@ export default function design (startState, bottomCharacter, acceptStates, ruleb
   let toPDA = () => {
     let startStack = mkStack([bottomCharacter]),
         startConfiguration = mkConfiguration(startState, startStack);
-    return mkPDA(startConfiguration, acceptStates, rulebook);
+    return mkDPDA(startConfiguration, acceptStates, rulebook);
   };
 
   let accepts = (string) => {

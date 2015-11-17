@@ -5,7 +5,7 @@ module.exports = {
     "nfa": "./finite-automata/nfa/main.js",
     "nfa-simulation": "./finite-automata/nfa/main-simulation.js",
     "regex": "./finite-automata/regex/main.js",
-    "pda": "./finite-automata/pda/main.js"
+    "dpda": "./pushdown-automata/dpda/main.js"
   },
 
   output: {
