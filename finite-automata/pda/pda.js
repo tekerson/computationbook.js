@@ -5,9 +5,9 @@ import * as R from "ramda";
 export default function pda (currentConfiguration, acceptStates, rulebook) {
   let isAccepting = () => R.contains(currentConfiguration.state, acceptStates);
   let readCharacter = (character) => {
-    currentConfiguration = rulebook.followFreeMoves(
-      rulebook.nextConfiguration(currentConfiguration, character)
-    );;
+    currentConfiguration = rulebook.appliesTo(currentConfiguration, character)
+      ? rulebook.followFreeMoves(rulebook.nextConfiguration(currentConfiguration, character))
+      : currentConfiguration.stuck();
   };
   let readString = (string) => { string.split('').forEach(readCharacter); };
 

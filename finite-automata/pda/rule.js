@@ -1,3 +1,5 @@
+import { reverse } from "ramda";
+
 import mkConfiguration from "./configuration";
 
 export default function rule (state, character, nextState, popCharacter, pushCharacters) {
@@ -9,7 +11,7 @@ export default function rule (state, character, nextState, popCharacter, pushCha
 
   let nextStack = (configuration) => {
     let popped = configuration.stack.pop();
-    return pushCharacters.reverse().reduce((stack, char) => stack.push(char), popped);
+    return reverse(pushCharacters).reduce((stack, char) => stack.push(char), popped);
   };
 
   let follow = (configuration) => mkConfiguration(nextState, nextStack(configuration));

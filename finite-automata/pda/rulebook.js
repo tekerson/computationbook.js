@@ -18,6 +18,7 @@ export default function rulebook (rules) {
 
   return Object.freeze({
     nextConfiguration,
-    followFreeMoves
+    followFreeMoves,
+    appliesTo
   });
 }
