@@ -6,7 +6,8 @@ module.exports = {
     "nfa-simulation": "./finite-automata/nfa/main-simulation.js",
     "regex": "./finite-automata/regex/main.js",
     "dpda": "./pushdown-automata/dpda/main.js",
-    "npda": "./pushdown-automata/npda/main.js"
+    "npda": "./pushdown-automata/npda/main.js",
+    "lexer": "./lexical-analyzer/main.js"
   },
 
   output: {
