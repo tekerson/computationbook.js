@@ -1,24 +1,25 @@
 import { reject, zip, maxBy, map, reduce, head, tail } from "ramda";
 
-let lexicalAnalyzer = (string) => {
-  const GRAMMAR = [
-    { token: 'i', pattern: 'if' },
-    { token: 'e', pattern: 'else' },
-    { token: 'w', pattern: 'while' },
-    { token: 'd', pattern: 'do-nothing' },
-    { token: '(', pattern: '\\(' },
-    { token: ')', pattern: '\\)' },
-    { token: '{', pattern: '\\{' },
-    { token: '}', pattern: '\\}' },
-    { token: ';', pattern: ';' },
-    { token: '=', pattern: '=' },
-    { token: '+', pattern: '\\+' },
-    { token: '*', pattern: '\\*' },
-    { token: '<', pattern: '<' },
-    { token: 'n', pattern: '[0-9]+' },
-    { token: 'b', pattern: 'true|false' },
-    { token: 'v', pattern: '[a-z]+' }
-  ];
+export const GRAMMAR = [
+  { token: 'i', pattern: 'if' },
+  { token: 'e', pattern: 'else' },
+  { token: 'w', pattern: 'while' },
+  { token: 'd', pattern: 'do-nothing' },
+  { token: '(', pattern: '\\(' },
+  { token: ')', pattern: '\\)' },
+  { token: '{', pattern: '\\{' },
+  { token: '}', pattern: '\\}' },
+  { token: ';', pattern: ';' },
+  { token: '=', pattern: '=' },
+  { token: '+', pattern: '\\+' },
+  { token: '*', pattern: '\\*' },
+  { token: '<', pattern: '<' },
+  { token: 'n', pattern: '[0-9]+' },
+  { token: 'b', pattern: 'true|false' },
+  { token: 'v', pattern: '[a-z]+' }
+];
+
+export default function lexicalAnalyzer (string) {
 
   let analyze = () => {
     let tokens = [];
@@ -54,6 +55,4 @@ let lexicalAnalyzer = (string) => {
   return Object.freeze({
     analyze
   });
-};
-
-export default lexicalAnalyzer;
+}

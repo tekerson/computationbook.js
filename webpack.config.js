@@ -7,7 +7,8 @@ module.exports = {
     "regex": "./finite-automata/regex/main.js",
     "dpda": "./pushdown-automata/dpda/main.js",
     "npda": "./pushdown-automata/npda/main.js",
-    "lexer": "./lexical-analyzer/main.js"
+    "lexer": "./lexical-analyzer/main.js",
+    "syntax": "./syntactic-analyzer/main.js"
   },
 
   output: {
